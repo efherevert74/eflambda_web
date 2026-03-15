@@ -3,9 +3,12 @@ LAMBDA_DIR := ../lambda
 TARGET := $(TARGET_DIR)/module.wasm
 
 CC := zig cc
+CFLAGS := -target wasm32-wasi -I$(LAMBDA_DIR) -lc
+# no way without wasi/musl/etc because stb_ds uses string.h
+# CFLAGS := -target wasm32-freestanding -I$(LAMBDA_DIR)
 
 $(TARGET): main.c $(LAMBDA_DIR)/lambda.h | $(TARGET_DIR)
-	$(CC) $< -o $@ -target wasm32-wasi -I$(LAMBDA_DIR) -lc
+	$(CC) $< -o $@ $(CFLAGS)
 
 $(TARGET_DIR):
 	mkdir -p $@

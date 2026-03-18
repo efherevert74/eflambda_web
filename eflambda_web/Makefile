@@ -3,7 +3,13 @@ TARGET_DIR := ./target
 TARGET := $(TARGET_DIR)/lambda.js
 
 CC := emcc
-CFLAGS := -I$(LAMBDA_DIR)
+CFLAGS := -I$(LAMBDA_DIR) \
+		  -sEXPORTED_FUNCTIONS='\
+		  _main,_term_display_wrapper,_term_reduce_wrapper,_term_parse_wrapper,\
+		  _term_free,\
+		  _malloc,_free\
+		  '\
+		  -sEXPORTED_RUNTIME_METHODS=ccall,cwrap,UTF8ToString,stringToUTF8
 
 $(TARGET): main.c $(LAMBDA_DIR)/lambda.h | $(TARGET_DIR)
 	$(CC) $< -o $@ $(CFLAGS)

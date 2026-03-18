@@ -14,4 +14,7 @@ $(TARGET_DIR):
 clean:
 	rm -r $(TARGET_DIR)
 
+run: $(TARGET)
+	python -m http.server 8000
+
 .PHONY: run clean

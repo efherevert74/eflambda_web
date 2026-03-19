@@ -12,9 +12,104 @@
 
         <p>Input lambda expression and press <b>reduce</b>:</p>
 
-        <input type="text" name="lambda_inp" required />
+        <input type="text" id="lambda_inp" required />
         <div>
             <button type="button" onclick="console.log('a')">Reduce</button>
         </div>
+        <div id="lambda_terms"></div>
+
+        <script>
+            let lambda_terms = document.getElementById("lambda_terms");
+            let lambda_inp = document.getElementById("lambda_inp");
+
+            let lazy = true;
+            let intermediate = true;
+
+            let currTerm = undefined;
+            const parseInp = () => {
+                let inp = lambda_inp.value;
+                let term = c_term_parse(inp);
+                return term;
+            };
+            const getTerm = () => {
+                if (currTerm === undefined) {
+                    currTerm = parseInp();
+                }
+                return currTerm;
+            };
+            const addTerm = (term_str) => {
+                let termText = document.createTextNode(term_str);
+                let newTerm = document.createElement("div");
+                newTerm.classList += "term";
+                newTerm.appendChild(termText);
+                lambda_terms.appendChild(newTerm);
+            };
+            const clearTerms = () => {
+                while (lambda_terms.lastChild) {
+                    lambda_terms.removeChild(lambda_terms.lastChild);
+                }
+            };
+            const reduce = () => {
+                let term = getTerm();
+                addTerm(c_term_display(term));
+                c_term_reduce(term, lazy);
+            };
+            const reduceFull = () => {
+                let term = getTerm();
+                if (intermediate) {
+                    do {
+                        addTerm(c_term_display(term));
+                    } while (c_term_reduce(term, lazy));
+                } else {
+                    addTerm(c_term_display(term));
+                    while (c_term_reduce(term, lazy)) {}
+                    addTerm(c_term_display(term));
+                }
+            };
+
+            lambda_inp.onchange = () => {
+                clearTerms();
+                if (currTerm !== undefined) {
+                    c_term_free(currTerm);
+                }
+                currTerm = parseInp();
+                reduce();
+            };
+
+            document.addEventListener("keydown", (event) => {
+                if (event.code === "Enter") {
+                    if (event.shiftKey) {
+                        event.preventDefault();
+                        reduceFull();
+                        return;
+                    }
+                    event.preventDefault();
+                    reduce();
+                    return;
+                }
+
+                if (document.activeElement !== document.body) {
+                    return;
+                }
+
+                switch (event.key) {
+                    case "I": {
+                        intermediate = !intermediate;
+                        console.log(`intermediate: ${intermediate}`);
+                        break;
+                    }
+                    case "L": {
+                        lazy = !lazy;
+                        console.log(`lazy: ${lazy}`);
+                        break;
+                    }
+                    case "C": {
+                        console.log("cleared");
+                        clearTerms();
+                        break;
+                    }
+                }
+            });
+        </script>
     </body>
 </html>

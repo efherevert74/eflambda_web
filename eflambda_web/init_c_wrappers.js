@@ -1,12 +1,13 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
-let c_term_parse, c_term_reduce, c_term_print, c_term_display;
+let c_term_parse, c_term_reduce, c_term_free, c_term_display;
 Module.onRuntimeInitialized = () => {
     c_term_parse = Module.cwrap("term_parse_wrapper", "number", ["string"]);
     c_term_reduce = Module.cwrap("term_reduce_wrapper", "bool", [
         "number",
         "bool",
     ]);
+    c_term_free = Module.cwrap("term_free", "void", ["number"]);
     c_term_display = (term) => {
         // another layer of wrapping for automatic conversion between c string
         // and js string

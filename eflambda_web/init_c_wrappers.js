@@ -18,6 +18,7 @@ Module.onRuntimeInitialized = () => {
         }
         let str_ptr = c_term_display.f(term);
         let str = Module.UTF8ToString(str_ptr);
+        str = str.replaceAll("\\", "λ");
         Module._free(str_ptr);
         return str;
     };

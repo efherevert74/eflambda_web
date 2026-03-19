@@ -1,41 +1,20 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Lambda calculus interpreter</title>
-  </head>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Lambda calculus interpreter</title>
+    </head>
 
-  <body>
-    <script src="./target/lambda.js"></script>
-    <script>
-      let c_term_parse, c_term_reduce, c_term_print, c_term_display;
-      Module.onRuntimeInitialized = () => {
-        c_term_parse = Module.cwrap("term_parse_wrapper", "number", ["string"]);
-        c_term_reduce = Module.cwrap("term_reduce_wrapper", "bool", [
-          "number",
-          "bool",
-        ]);
-        c_term_display = (term) => {
-          if (c_term_display.f == undefined) {
-            c_term_display.f = Module.cwrap("term_display_wrapper", "number", [
-              "number",
-            ]);
-          }
-          let str_ptr = c_term_display.f(term);
-          let str = Module.UTF8ToString(str_ptr);
-          Module._free(str_ptr);
-          return str;
-        };
-      };
-    </script>
+    <body>
+        <script src="./target/lambda.js"></script>
 
-    <h1>Lambda calculus interpreter.</h1>
+        <h1>Lambda calculus interpreter.</h1>
 
-    <p>Input lambda expression and press <b>reduce</b>:</p>
+        <p>Input lambda expression and press <b>reduce</b>:</p>
 
-    <input type="text" name="lambda_inp" required />
-    <div>
-      <button type="button" onclick="console.log('a')">Reduce</button>
-    </div>
-  </body>
+        <input type="text" name="lambda_inp" required />
+        <div>
+            <button type="button" onclick="console.log('a')">Reduce</button>
+        </div>
+    </body>
 </html>

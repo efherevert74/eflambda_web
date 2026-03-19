@@ -9,9 +9,10 @@ CFLAGS := -I$(LAMBDA_DIR) \
 		  _term_free,\
 		  _malloc,_free\
 		  '\
-		  -sEXPORTED_RUNTIME_METHODS=ccall,cwrap,UTF8ToString,stringToUTF8
+		  -sEXPORTED_RUNTIME_METHODS=ccall,cwrap,UTF8ToString,stringToUTF8 \
+		  --post-js init_c_wrappers.js
 
-$(TARGET): main.c $(LAMBDA_DIR)/lambda.h | $(TARGET_DIR)
+$(TARGET): main.c $(LAMBDA_DIR)/lambda.h init_c_wrappers.js | $(TARGET_DIR)
 	$(CC) $< -o $@ $(CFLAGS)
 
 $(TARGET_DIR):

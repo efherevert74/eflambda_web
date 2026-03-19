@@ -7,29 +7,86 @@
 
     <body>
         <script src="./target/lambda.js"></script>
+        <link rel="stylesheet" href="./index.css" />
 
         <h1>Lambda calculus interpreter.</h1>
 
         <p>Input lambda expression and press <b>reduce</b>:</p>
 
-        <input type="text" id="lambda_inp" required />
-        <div>
-            <button type="button" onclick="console.log('a')">Reduce</button>
+        <div class="menu">
+            <div class="menu-item">
+                <input
+                    type="checkbox"
+                    id="intermediate"
+                    name="intermediate"
+                    checked
+                />
+                <label for="intermediate">
+                    Intermediate steps
+                    <span class="tooltip">
+                        Show all intermediate reduction steps.
+                        <br />
+                        Keybinding: I
+                    </span>
+                </label>
+            </div>
+            <div class="menu-item">
+                <input type="checkbox" id="lazy" name="lazy" unchecked />
+                <label for="lazy">
+                    Lazy evaluation
+                    <span class="tooltip">
+                        Don't reduce expressions under lambda abstraction.
+                        <br />
+                        Keybinding: L
+                    </span>
+                </label>
+            </div>
         </div>
-        <div id="lambda_terms"></div>
+
+        <div class="lambda_body">
+            <input type="text" id="lambda_inp" required />
+            <div>
+                <button type="button" onclick="reduce()">Reduce</button>
+                <button type="button" onclick="reduceFull()">
+                    Full reduce
+                </button>
+                <button
+                    type="button"
+                    onclick="clearTerms()"
+                    class="button-clear"
+                >
+                    Clear
+                </button>
+            </div>
+            <div id="lambda_terms"></div>
+        </div>
+
+        <div id="popup" class="hidden"></div>
 
         <script>
+            const MAX_REDUCTION_DEPTH = 128;
+
             let lambda_terms = document.getElementById("lambda_terms");
             let lambda_inp = document.getElementById("lambda_inp");
+            let popup = document.getElementById("popup");
 
-            let lazy = true;
-            let intermediate = true;
+            let lazy_check = document.getElementById("lazy");
+            let intermediate_check = document.getElementById("intermediate");
+
+            let lazy = lazy_check.checked;
+            let intermediate = intermediate_check.checked;
 
             let currTerm = undefined;
             const parseInp = () => {
                 let inp = lambda_inp.value;
                 let term = c_term_parse(inp);
                 return term;
+            };
+            const reInputTerm = () => {
+                if (currTerm !== undefined) {
+                    c_term_free(currTerm);
+                }
+                currTerm = parseInp();
             };
             const getTerm = () => {
                 if (currTerm === undefined) {
@@ -43,21 +100,33 @@
                 newTerm.classList += "term";
                 newTerm.appendChild(termText);
                 lambda_terms.appendChild(newTerm);
+
+                newTerm.scrollIntoView({
+                    behavior: "smooth",
+                    block: "nearest",
+                });
             };
             const clearTerms = () => {
                 while (lambda_terms.lastChild) {
                     lambda_terms.removeChild(lambda_terms.lastChild);
                 }
+                reInputTerm();
             };
             const reduce = () => {
                 let term = getTerm();
                 addTerm(c_term_display(term));
                 c_term_reduce(term, lazy);
             };
+
             const reduceFull = () => {
                 let term = getTerm();
+                let depth = 0;
                 if (intermediate) {
                     do {
+                        if (depth++ > MAX_REDUCTION_DEPTH) {
+                            showPopup("Maximum reduction depth reached.");
+                            break;
+                        }
                         addTerm(c_term_display(term));
                     } while (c_term_reduce(term, lazy));
                 } else {
@@ -67,16 +136,32 @@
                 }
             };
 
-            lambda_inp.onchange = () => {
+            const showPopup = (message) => {
+                popup.innerText = message;
+                popup.classList.remove("hidden");
+                setTimeout(() => {
+                    popup.classList.add("hidden");
+                }, 3000);
+            };
+
+            lazy_check.onchange = () => {
+                lazy = lazy_check.checked;
+            };
+            intermediate_check.onchange = () => {
+                intermediate = intermediate_check.checked;
+            };
+
+            lambda_inp.oninput = () => {
                 clearTerms();
-                if (currTerm !== undefined) {
-                    c_term_free(currTerm);
-                }
-                currTerm = parseInp();
                 reduce();
             };
 
             document.addEventListener("keydown", (event) => {
+                if (event.code === "Escape") {
+                    if (document.activeElement === lambda_inp) {
+                        lambda_inp.blur();
+                    }
+                }
                 if (event.code === "Enter") {
                     if (event.shiftKey) {
                         event.preventDefault();
@@ -93,17 +178,18 @@
                 }
 
                 switch (event.key) {
-                    case "I": {
-                        intermediate = !intermediate;
-                        console.log(`intermediate: ${intermediate}`);
+                    case "i": {
+                        intermediate_check.checked =
+                            !intermediate_check.checked;
+                        intermediate_check.onchange();
                         break;
                     }
-                    case "L": {
-                        lazy = !lazy;
-                        console.log(`lazy: ${lazy}`);
+                    case "l": {
+                        lazy_check.checked = !lazy_check.checked;
+                        lazy_check.onchange();
                         break;
                     }
-                    case "C": {
+                    case "c": {
                         console.log("cleared");
                         clearTerms();
                         break;

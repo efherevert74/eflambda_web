@@ -1,0 +1,150 @@
+:root {
+    --bg-color: #111216;
+    --fg-color: #b9b3aa;
+
+    --input-bg-color: #15181b;
+    --input-border-color: #756c60;
+
+    --button-bg-color: #002e92;
+    --button-fg-color: #ffffff;
+    --button-hover-bg-color: #3257a7;
+
+    --button-clear-bg-color: #622e25;
+    --button-clear-hover-bg-color: #7a3a2e;
+
+    --tooltip-bg-color: #3f444f;
+    --tooltip-fg-color: #ffffff;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+    font-family: "Courier New", Courier, monospace;
+    text-align: center;
+    margin: 0;
+    padding: 2em;
+}
+
+h1 {
+    font-size: 2.5em;
+    margin-bottom: 0.5em;
+}
+
+p {
+    margin-bottom: 2em;
+}
+
+.lambda_body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+}
+
+#lambda_inp {
+    background-color: var(--input-bg-color);
+    color: var(--fg-color);
+    border: 1px solid var(--input-border-color);
+    border-radius: 5px;
+    padding: 0.5em;
+    width: 50%;
+    font-size: 1.2em;
+}
+
+button {
+    background-color: var(--button-bg-color);
+    color: var(--button-fg-color);
+    border: none;
+    border-radius: 5px;
+    padding: 0.5em 1em;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: var(--button-hover-bg-color);
+}
+
+.button-clear {
+    background-color: var(--button-clear-bg-color);
+}
+
+.button-clear:hover {
+    background-color: var(--button-clear-hover-bg-color);
+}
+
+#lambda_terms {
+    width: 100%;
+    margin-top: 1em;
+}
+
+.term {
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+.menu {
+    display: flex;
+    justify-content: center;
+    gap: 2em;
+    margin-bottom: 2em;
+}
+
+.menu-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.menu-item .tooltip {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s;
+
+    width: 200px;
+    position: absolute;
+    z-index: 1;
+
+    background-color: var(--tooltip-bg-color);
+    color: var(--tooltip-fg-color);
+
+    text-align: center;
+    border-radius: 6px;
+
+    padding: 5px;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+}
+
+.menu-item:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+label {
+    cursor: pointer;
+}
+
+#popup {
+    opacity: 1;
+
+    position: fixed;
+    top: 0;
+    left: 70%;
+    right: 0;
+    border-radius: 0 0 0 1em;
+    padding: 1em;
+
+    background-color: var(--button-clear-bg-color);
+    color: var(--fg-color);
+
+    text-align: center;
+    transition: opacity 0.5s;
+}
+
+#popup.hidden {
+    opacity: 0;
+}

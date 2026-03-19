@@ -6,10 +6,12 @@ CC := emcc
 CFLAGS := -I$(LAMBDA_DIR) \
 		  -sEXPORTED_FUNCTIONS='\
 		  _main,_term_display_wrapper,_term_reduce_wrapper,_term_parse_wrapper,\
-		  _term_free,\
+		  _term_is_inv,_term_free,\
+		  _var_lib_get_len,_var_lib_get_term,\
+		  _var_lib_get,\
 		  _malloc,_free\
 		  '\
-		  -sEXPORTED_RUNTIME_METHODS=ccall,cwrap,UTF8ToString,stringToUTF8 \
+		  -sEXPORTED_RUNTIME_METHODS=ccall,cwrap,UTF8ToString,HEAP32 \
 		  --post-js init_c_wrappers.js
 
 $(TARGET): main.c $(LAMBDA_DIR)/lambda.h init_c_wrappers.js | $(TARGET_DIR)

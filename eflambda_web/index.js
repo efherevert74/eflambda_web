@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const MAX_REDUCTION_DEPTH = 128;
+const MAX_REDUCTION_DEPTH = 2 << 14;
 
 let lambda_terms = document.getElementById("lambda-terms");
 let lambda_inp = document.getElementById("lambda-inp");
@@ -13,23 +13,44 @@ let lazy = lazy_check.checked;
 let intermediate = intermediate_check.checked;
 
 let currTerm = undefined;
-const parseInp = () => {
+
+// parse
+const parseInpPreview = () => {
     let inp = lambda_inp.value.replaceAll("λ", "\\");
-    let term = c_term_parse(inp);
+    let term = c_term_parse_preview(inp);
     return term;
 };
-const reInputTerm = () => {
+
+// parse + update vars
+const parseInpCommit = () => {
+    let inp = lambda_inp.value.replaceAll("λ", "\\");
+    let term = c_term_parse_commit(inp);
+    return term;
+};
+
+// parse into currTerm
+const reParseInpPreview = () => {
     if (currTerm !== undefined) {
         c_term_free(currTerm);
     }
-    currTerm = parseInp();
+    currTerm = parseInpPreview();
 };
+
+// parse into currTerm + commit
+const reParseInpCommit = () => {
+    if (currTerm !== undefined) {
+        c_term_free(currTerm);
+    }
+    currTerm = parseInpCommit();
+};
+
 const getTerm = () => {
     if (currTerm === undefined) {
-        currTerm = parseInp();
+        currTerm = parseInpCommit();
     }
     return currTerm;
 };
+
 const addTerm = (term_str) => {
     let termText = document.createTextNode(term_str);
     let newTerm = document.createElement("div");
@@ -39,28 +60,45 @@ const addTerm = (term_str) => {
 
     return newTerm;
 };
+
 const clearTerms = () => {
     while (lambda_terms.lastChild) {
         lambda_terms.removeChild(lambda_terms.lastChild);
     }
-    reInputTerm();
     // wait a little for browser to react to deletion before scrolling
     setTimeout(
         () => window.scrollTo({ top: 0, left: 0, behavior: "smooth" }),
         30,
     );
 };
-const reduce = (scroll = true) => {
+
+// parse + show
+const previewReduction = () => {
+    let term = parseInpPreview();
+    addTerm(c_term_display(term));
+    c_term_free(term); // free the temp term
+};
+
+// reduce + commit + update UI
+const reduce = () => {
     let term = getTerm();
 
     let termNode = addTerm(c_term_display(term));
-    if (scroll) {
-        termNode.scrollIntoView({ behavior: "smooth" });
-    }
+    termNode.scrollIntoView({ behavior: "smooth", block: "nearest" });
 
     c_term_reduce(term, lazy);
+    updateVarLibPanel();
 };
 
+const showPopup = (message) => {
+    popup.innerText = message;
+    popup.classList.remove("hidden");
+    setTimeout(() => {
+        popup.classList.add("hidden");
+    }, 3000);
+};
+
+// reduce until normal + commit + update UI
 const reduceFull = () => {
     let term = getTerm();
     let depth = 0;
@@ -79,25 +117,14 @@ const reduceFull = () => {
         }
         addTerm(c_term_display(term));
     }
-    lambda_terms.lastChild.scrollIntoView({ behavior: "smooth" });
+    updateVarLibPanel();
+    lambda_terms.lastChild.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+    });
 };
 
-const showPopup = (message) => {
-    popup.innerText = message;
-    popup.classList.remove("hidden");
-    setTimeout(() => {
-        popup.classList.add("hidden");
-    }, 3000);
-};
-
-lazy_check.onchange = () => {
-    lazy = lazy_check.checked;
-};
-intermediate_check.onchange = () => {
-    intermediate = intermediate_check.checked;
-};
-
-const update_var_lib_panel = () => {
+const updateVarLibPanel = () => {
     let var_lib = c_var_lib_get();
 
     var_lib_panel.innerHTML = "";
@@ -119,10 +146,18 @@ const update_var_lib_panel = () => {
     }
 };
 
+lazy_check.onchange = () => {
+    lazy = lazy_check.checked;
+};
+
+intermediate_check.onchange = () => {
+    intermediate = intermediate_check.checked;
+};
+
 lambda_inp.oninput = () => {
     clearTerms();
-    reduce(false);
-    update_var_lib_panel();
+    reParseInpPreview();
+    previewReduction();
 };
 
 Promise.all([
@@ -133,48 +168,70 @@ Promise.all([
         document.addEventListener("WASMReady", resolve, { once: true });
     }),
 ]).then(() => {
+    c_var_lib_fill_std();
     if (lambda_inp.value === "") {
-        lambda_inp.value = "Fact 10";
-        lambda_inp.oninput();
+        lambda_inp.value = "+ 1 2"; // add showcase term
     }
-    update_var_lib_panel();
+    reParseInpCommit(); // parse and commit showcase term
+    updateVarLibPanel();
+    // trigger a preview
+    lambda_inp.oninput();
 });
 
+// keybindings
 document.addEventListener("keydown", (event) => {
+    // TODO: check this
+    // fixes escape not acting on input field
     if (event.code === "Escape") {
         if (document.activeElement === lambda_inp) {
             lambda_inp.blur();
         }
     }
     if (event.code === "Enter") {
-        if (event.shiftKey) {
-            event.preventDefault();
-            reduceFull();
-            return;
-        }
         event.preventDefault();
-        reduce();
+        if (event.shiftKey) {
+            reduceFull();
+        } else {
+            reduce();
+        }
         return;
     }
 
+    // don't act if the focus is on the input field
+    // or something else
     if (document.activeElement !== document.body) {
         return;
     }
 
     switch (event.key) {
-        case "i": {
+        case "I": {
             intermediate_check.checked = !intermediate_check.checked;
             intermediate_check.onchange();
             break;
         }
-        case "l": {
+        case "L": {
             lazy_check.checked = !lazy_check.checked;
             lazy_check.onchange();
             break;
         }
-        case "c": {
+        case "C": {
             clearTerms();
+            reParseInpCommit();
+            if (currTerm !== undefined) {
+                c_term_free(currTerm);
+                currTerm = undefined;
+            }
+            previewReduction();
             break;
+        }
+        case "X": {
+            c_var_lib_clear();
+            updateVarLibPanel();
+            break;
+        }
+        case "S": {
+            c_var_lib_fill_std();
+            updateVarLibPanel();
         }
     }
 });

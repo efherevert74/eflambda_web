@@ -5,10 +5,11 @@ TARGET := $(TARGET_DIR)/lambda.js
 CC := emcc
 CFLAGS := -I$(LAMBDA_DIR) \
 		  -sEXPORTED_FUNCTIONS='\
-		  _main,_term_display_wrapper,_term_reduce_wrapper,_term_parse_wrapper,\
+		  _term_display_wrapper,\
+		  _term_parse_commit_wrapper,_term_parse_preview_wrapper,\
+		  _term_reduce_wrapper,\
 		  _term_is_inv,_term_free,\
-		  _var_lib_get_len,_var_lib_get_term,\
-		  _var_lib_get,\
+		  _var_lib_get_len,_var_lib_get,_var_lib_fill_std,_var_lib_clear,\
 		  _malloc,_free\
 		  '\
 		  -sEXPORTED_RUNTIME_METHODS=ccall,cwrap,UTF8ToString,HEAP32 \

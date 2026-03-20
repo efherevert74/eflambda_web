@@ -1,10 +1,26 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
-let c_var_lib_get_len, c_var_lib_get_term, c_var_lib_get;
-let c_term_parse, c_term_reduce, c_term_free, c_term_display, c_term_is_inv;
+let c_var_lib_get_len,
+    c_var_lib_get_term,
+    c_var_lib_get,
+    c_var_lib_fill_std,
+    c_var_lib_clear;
+let c_term_parse_commit,
+    c_term_parse_preview,
+    c_term_reduce,
+    c_term_free,
+    c_term_display,
+    c_term_is_inv;
 Module.onRuntimeInitialized = () => {
     c_term_free = Module.cwrap("term_free", "void", ["number"]);
-    c_term_parse = Module.cwrap("term_parse_wrapper", "number", ["string"]);
+    c_term_parse_commit = Module.cwrap("term_parse_commit_wrapper", "number", [
+        "string",
+    ]);
+    c_term_parse_preview = Module.cwrap(
+        "term_parse_preview_wrapper",
+        "number",
+        ["string"],
+    );
     c_term_reduce = Module.cwrap("term_reduce_wrapper", "bool", [
         "number",
         "bool",
@@ -30,9 +46,6 @@ Module.onRuntimeInitialized = () => {
         return str;
     };
 
-    // c_var_lib_get_term = Module.cwrap("var_lib_get_term", "number", [
-    //     "number",
-    // ]);
     c_var_lib_get = () => {
         if (
             c_var_lib_get.get_lib === undefined ||
@@ -66,5 +79,8 @@ Module.onRuntimeInitialized = () => {
         }
         return res;
     };
+    c_var_lib_fill_std = Module.cwrap("var_lib_fill_std", "void", []);
+    c_var_lib_clear = Module.cwrap("var_lib_clear", "void", []);
+
     document.dispatchEvent(new CustomEvent("WASMReady"));
 };

@@ -136,9 +136,9 @@ input[type="checkbox"] {
     border-radius: 6px;
 
     padding: 5px;
-    margin-left: -100px;
     bottom: 125%;
     left: 50%;
+    transform: translateX(-50%);
 }
 
 .menu-item:hover .tooltip,
@@ -154,6 +154,18 @@ input[type="checkbox"] {
 
 label {
     cursor: pointer;
+}
+
+.var-lib-container {
+    position: sticky;
+    top: 1em;
+
+    display: flex;
+    flex-direction: column;
+
+    height: 90vh;
+    width: 35%;
+    min-width: 35%;
 }
 
 #var-lib-panel {
@@ -183,18 +195,6 @@ label {
     color: var(--fg-color);
 }
 
-.var-lib-container {
-    position: sticky;
-    top: 1em;
-
-    display: flex;
-    flex-direction: column;
-
-    height: 90vh;
-    width: 35%;
-    min-width: 35%;
-}
-
 .var-lib-buttons-container {
     display: inline-flex;
     width: 100%;
@@ -203,6 +203,7 @@ label {
     gap: 0.5em;
 }
 
+.var-lib-buttons-container .button-wrapper,
 .var-lib-buttons-container button {
     width: 100%;
 }

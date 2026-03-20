@@ -48,14 +48,14 @@
             <div>
                 <div class="button-wrapper">
                     <button type="button" onclick="reduce()">Reduce</button>
-                    <span class="tooltip"> Keybinding: Space </span>
+                    <span class="tooltip"> Keybinding: Enter</span>
                 </div>
 
                 <div class="button-wrapper">
                     <button type="button" onclick="reduceFull()">
                         Full reduce
                     </button>
-                    <span class="tooltip"> Keybinding: Shift+Enter </span>
+                    <span class="tooltip"> Keybinding: Shift+Enter</span>
                 </div>
 
                 <div class="button-wrapper">
@@ -74,10 +74,40 @@
                 <div class="var-lib-container">
                     <div id="var-lib-panel"></div>
                     <div class="var-lib-buttons-container">
-                        <button type="button">Load</button>
-                        <button type="button" class="button-clear">
-                            Clear
-                        </button>
+                        <div class="button-wrapper">
+                            <button
+                                type="button"
+                                onclick="
+                                    {
+                                        c_var_lib_fill_std();
+                                        updateVarLibPanel();
+                                    }
+                                "
+                            >
+                                Load
+                            </button>
+                            <span class="tooltip">
+                                Load variables from standard library.
+                                Keybinding: S
+                            </span>
+                        </div>
+                        <div class="button-wrapper">
+                            <button
+                                type="button"
+                                class="button-clear"
+                                onclick="
+                                    {
+                                        c_var_lib_clear();
+                                        updateVarLibPanel();
+                                    }
+                                "
+                            >
+                                Clear
+                            </button>
+                            <span class="tooltip">
+                                Clear all variables. Keybinding: X
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>

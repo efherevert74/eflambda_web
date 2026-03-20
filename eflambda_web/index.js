@@ -12,6 +12,7 @@ let intermediate_check = document.getElementById("intermediate");
 let lazy = lazy_check.checked;
 let intermediate = intermediate_check.checked;
 
+let is_dirty = false;
 let currTerm = undefined;
 
 // parse
@@ -155,6 +156,9 @@ intermediate_check.onchange = () => {
 };
 
 lambda_inp.oninput = () => {
+    if (lambda_inp.value !== "") {
+        is_dirty = true;
+    }
     clearTerms();
     reParseInpPreview();
     previewReduction();
@@ -189,6 +193,10 @@ document.addEventListener("keydown", (event) => {
     }
     if (event.code === "Enter") {
         event.preventDefault();
+        if (is_dirty) {
+            reParseInpCommit();
+            is_dirty = false;
+        }
         if (event.shiftKey) {
             reduceFull();
         } else {

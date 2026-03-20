@@ -5,15 +5,21 @@
     --input-bg-color: #15181b;
     --input-border-color: #756c60;
 
-    --button-bg-color: #002e92;
+    --button-bg-color: #00306d;
     --button-fg-color: #ffffff;
     --button-hover-bg-color: #3257a7;
 
-    --button-clear-bg-color: #622e25;
+    --button-clear-bg-color: #3e1e18;
     --button-clear-hover-bg-color: #7a3a2e;
 
     --tooltip-bg-color: #3f444f;
     --tooltip-fg-color: #ffffff;
+
+    --var-lib-key-color: #74b7ff;
+}
+
+html {
+    color-scheme: dark !important;
 }
 
 body {
@@ -34,14 +40,21 @@ p {
     margin-bottom: 2em;
 }
 
-.lambda_body {
+.lambda-body-container {
+    /* flex: max-content; */
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* align-items: flex-end; */
+}
+
+.lambda-body {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1em;
 }
 
-#lambda_inp {
+#lambda-inp {
     background-color: var(--input-bg-color);
     color: var(--fg-color);
     border: 1px solid var(--input-border-color);
@@ -74,7 +87,16 @@ button:hover {
     background-color: var(--button-clear-hover-bg-color);
 }
 
-#lambda_terms {
+input[type="checkbox"] {
+    accent-color: var(--button-bg-color);
+}
+
+.lambda-display {
+    width: 100%;
+    display: flex;
+}
+
+#lambda-terms {
     width: 100%;
     margin-top: 1em;
 }
@@ -98,14 +120,14 @@ button:hover {
     gap: 0.5em;
 }
 
-.menu-item .tooltip {
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.3s;
-
+.tooltip {
     width: 200px;
     position: absolute;
     z-index: 1;
+
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s;
 
     background-color: var(--tooltip-bg-color);
     color: var(--tooltip-fg-color);
@@ -114,18 +136,57 @@ button:hover {
     border-radius: 6px;
 
     padding: 5px;
+    margin-left: -100px;
     bottom: 125%;
     left: 50%;
-    margin-left: -100px;
 }
 
-.menu-item:hover .tooltip {
+.menu-item:hover .tooltip,
+.button-wrapper:hover .tooltip {
     visibility: visible;
     opacity: 1;
 }
 
+.button-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
 label {
     cursor: pointer;
+}
+
+#var-lib-panel {
+    position: sticky;
+    top: 1em;
+
+    width: 30%;
+    min-width: 30%;
+
+    height: 80vh;
+    overflow-y: auto;
+    margin-left: 1em;
+    padding: 1em;
+
+    background-color: var(--input-bg-color);
+
+    border: 1px solid var(--input-border-color);
+    border-radius: 5px;
+}
+
+.var-lib-item {
+    margin-bottom: 0.5em;
+    text-align: left;
+    font-size: 0.9em;
+}
+
+.var-lib-key {
+    color: var(--var-lib-key-color);
+    font-weight: bold;
+}
+
+.var-lib-value {
+    color: var(--fg-color);
 }
 
 #popup {

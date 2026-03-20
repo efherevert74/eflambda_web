@@ -1,8 +1,9 @@
 /* eslint-disable no-undef */
 const MAX_REDUCTION_DEPTH = 128;
 
-let lambda_terms = document.getElementById("lambda_terms");
-let lambda_inp = document.getElementById("lambda_inp");
+let lambda_terms = document.getElementById("lambda-terms");
+let lambda_inp = document.getElementById("lambda-inp");
+let var_lib_panel = document.getElementById("var-lib-panel");
 let popup = document.getElementById("popup");
 
 let lazy_check = document.getElementById("lazy");
@@ -13,7 +14,7 @@ let intermediate = intermediate_check.checked;
 
 let currTerm = undefined;
 const parseInp = () => {
-    let inp = lambda_inp.value;
+    let inp = lambda_inp.value.replaceAll("λ", "\\");
     let term = c_term_parse(inp);
     return term;
 };
@@ -36,20 +37,27 @@ const addTerm = (term_str) => {
     newTerm.appendChild(termText);
     lambda_terms.appendChild(newTerm);
 
-    newTerm.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-    });
+    return newTerm;
 };
 const clearTerms = () => {
     while (lambda_terms.lastChild) {
         lambda_terms.removeChild(lambda_terms.lastChild);
     }
     reInputTerm();
+    // wait a little for browser to react to deletion before scrolling
+    setTimeout(
+        () => window.scrollTo({ top: 0, left: 0, behavior: "smooth" }),
+        30,
+    );
 };
-const reduce = () => {
+const reduce = (scroll = true) => {
     let term = getTerm();
-    addTerm(c_term_display(term));
+
+    let termNode = addTerm(c_term_display(term));
+    if (scroll) {
+        termNode.scrollIntoView({ behavior: "smooth" });
+    }
+
     c_term_reduce(term, lazy);
 };
 
@@ -71,6 +79,7 @@ const reduceFull = () => {
         }
         addTerm(c_term_display(term));
     }
+    lambda_terms.lastChild.scrollIntoView({ behavior: "smooth" });
 };
 
 const showPopup = (message) => {
@@ -88,10 +97,48 @@ intermediate_check.onchange = () => {
     intermediate = intermediate_check.checked;
 };
 
+const update_var_lib_panel = () => {
+    let var_lib = c_var_lib_get();
+
+    var_lib_panel.innerHTML = "";
+    for (const [key, value] of Object.entries(var_lib)) {
+        let var_div = document.createElement("div");
+        var_div.classList.add("var-lib-item");
+
+        let key_span = document.createElement("span");
+        key_span.classList.add("var-lib-key");
+        key_span.innerText = key;
+
+        let value_span = document.createElement("span");
+        value_span.classList.add("var-lib-value");
+        value_span.innerText = " = " + value;
+
+        var_div.appendChild(key_span);
+        var_div.appendChild(value_span);
+        var_lib_panel.appendChild(var_div);
+    }
+};
+
 lambda_inp.oninput = () => {
     clearTerms();
-    reduce();
+    reduce(false);
+    update_var_lib_panel();
 };
+
+Promise.all([
+    new Promise((resolve) => {
+        document.addEventListener("DOMContentLoaded", resolve, { once: true });
+    }),
+    new Promise((resolve) => {
+        document.addEventListener("WASMReady", resolve, { once: true });
+    }),
+]).then(() => {
+    if (lambda_inp.value === "") {
+        lambda_inp.value = "Fact 10";
+        lambda_inp.oninput();
+    }
+    update_var_lib_panel();
+});
 
 document.addEventListener("keydown", (event) => {
     if (event.code === "Escape") {
@@ -126,7 +173,6 @@ document.addEventListener("keydown", (event) => {
             break;
         }
         case "c": {
-            console.log("cleared");
             clearTerms();
             break;
         }

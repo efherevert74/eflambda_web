@@ -66,4 +66,5 @@ Module.onRuntimeInitialized = () => {
         }
         return res;
     };
+    document.dispatchEvent(new CustomEvent("WASMReady"));
 };

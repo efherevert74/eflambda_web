@@ -48,18 +48,14 @@
             <div>
                 <div class="button-wrapper">
                     <button type="button" onclick="reduce()">Reduce</button>
-                    <span class="tooltip">
-                        Keybinding: Space
-                    </span>
+                    <span class="tooltip"> Keybinding: Space </span>
                 </div>
 
                 <div class="button-wrapper">
                     <button type="button" onclick="reduceFull()">
                         Full reduce
                     </button>
-                    <span class="tooltip">
-                        Keybinding: Shift+Enter
-                    </span>
+                    <span class="tooltip"> Keybinding: Shift+Enter </span>
                 </div>
 
                 <div class="button-wrapper">
@@ -70,14 +66,20 @@
                     >
                         Clear
                     </button>
-                    <span class="tooltip">
-                        Keybinding: C
-                    </span>
+                    <span class="tooltip"> Keybinding: C </span>
                 </div>
             </div>
             <div class="lambda-display">
                 <div id="lambda-terms"></div>
-                <div id="var-lib-panel"></div>
+                <div class="var-lib-container">
+                    <div id="var-lib-panel"></div>
+                    <div class="var-lib-buttons-container">
+                        <button type="button">Load</button>
+                        <button type="button" class="button-clear">
+                            Clear
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 

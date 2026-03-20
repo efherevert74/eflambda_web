@@ -157,18 +157,12 @@ label {
 }
 
 #var-lib-panel {
-    position: sticky;
-    top: 1em;
-
-    width: 30%;
-    min-width: 30%;
-
-    height: 80vh;
+    height: 100%;
     overflow-y: auto;
-    margin-left: 1em;
-    padding: 1em;
 
     background-color: var(--input-bg-color);
+
+    padding: 1em;
 
     border: 1px solid var(--input-border-color);
     border-radius: 5px;
@@ -187,6 +181,30 @@ label {
 
 .var-lib-value {
     color: var(--fg-color);
+}
+
+.var-lib-container {
+    position: sticky;
+    top: 1em;
+
+    display: flex;
+    flex-direction: column;
+
+    height: 90vh;
+    width: 35%;
+    min-width: 35%;
+}
+
+.var-lib-buttons-container {
+    display: inline-flex;
+    width: 100%;
+
+    margin-top: 0.5em;
+    gap: 0.5em;
+}
+
+.var-lib-buttons-container button {
+    width: 100%;
 }
 
 #popup {

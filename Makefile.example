@@ -1,0 +1,30 @@
+EFLAMBDA_DIR := ./eflambda
+TARGET_DIR := ./target
+TARGET := $(TARGET_DIR)/lambda.js
+
+CC := emcc
+CFLAGS := -I$(EFLAMBDA_DIR) \
+		  -sEXPORTED_FUNCTIONS='\
+		  _term_display_wrapper,\
+		  _term_parse_commit_wrapper,_term_parse_preview_wrapper,\
+		  _term_reduce_wrapper,\
+		  _term_is_inv,_term_free,\
+		  _var_lib_get_len,_var_lib_get,_var_lib_fill_std,_var_lib_clear,\
+		  _malloc,_free\
+		  '\
+		  -sEXPORTED_RUNTIME_METHODS=ccall,cwrap,UTF8ToString,HEAP32 \
+		  --post-js init_c_wrappers.js
+
+$(TARGET): main.c $(EFLAMBDA_DIR)/eflambda.h init_c_wrappers.js | $(TARGET_DIR)
+	$(CC) $< -o $@ $(CFLAGS)
+
+$(TARGET_DIR):
+	mkdir -p $(TARGET_DIR)
+
+clean:
+	rm -r $(TARGET_DIR)
+
+run: $(TARGET)
+	python -m http.server 8000
+
+.PHONY: run clean

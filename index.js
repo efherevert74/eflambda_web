@@ -184,7 +184,6 @@ Promise.all([
 
 // keybindings
 document.addEventListener("keydown", (event) => {
-    // TODO: check this
     // fixes escape not acting on input field
     if (event.code === "Escape") {
         if (document.activeElement === lambda_inp) {

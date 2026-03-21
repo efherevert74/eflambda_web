@@ -1,7 +1,6 @@
-#include "lambda.h"
-#include "lambda_std.h"
+#include "eflambda.h"
+#include "eflambda_std.h"
 #include <stdbool.h>
-#include <stdio.h>
 
 VarLib *lib = NULL;
 

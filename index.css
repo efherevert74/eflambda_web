@@ -40,13 +40,6 @@ p {
     margin-bottom: 2em;
 }
 
-.lambda-body-container {
-    /* flex: max-content; */
-    /* display: flex; */
-    /* flex-direction: column; */
-    /* align-items: flex-end; */
-}
-
 .lambda-body {
     display: flex;
     flex-direction: column;

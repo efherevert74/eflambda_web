@@ -1,4 +1,4 @@
-target/
+eflambda/
 
 Makefile
 compile_flags.txt

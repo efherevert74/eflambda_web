@@ -1,6 +1,7 @@
 # Eflambda Web
 
-Web interface for a lambda calculus interpreter.
+Web interface for lambda calculus interpreter.
+Written in plain JS and CSS.
 Uses [eflambda.h][eflambda] C library (through WebAssembly) for working with
 lambda expressions.
 

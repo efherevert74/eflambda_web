@@ -23,94 +23,59 @@ html {
 }
 
 body {
-    background-color: var(--bg-color);
-    color: var(--fg-color);
-    font-family: "Courier New", Courier, monospace;
-    text-align: center;
     margin: 0;
     padding: 2em;
+
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+
+    text-align: center;
+    font-family: "Courier New", Courier, monospace;
 }
 
 h1 {
-    font-size: 2.5em;
     margin-bottom: 0.5em;
+    font-size: 2.5em;
 }
 
 p {
     margin-bottom: 2em;
 }
 
-.lambda-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1em;
-}
-
-#lambda-inp {
-    background-color: var(--input-bg-color);
-    color: var(--fg-color);
-    border: 1px solid var(--input-border-color);
-    border-radius: 5px;
-    padding: 0.5em;
-    width: 50%;
-    font-size: 1.2em;
-}
-
-button {
-    background-color: var(--button-bg-color);
-    color: var(--button-fg-color);
-    border: none;
-    border-radius: 5px;
-    padding: 0.5em 1em;
-    font-size: 1em;
+label {
     cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-button:hover {
-    background-color: var(--button-hover-bg-color);
-}
-
-.button-clear {
-    background-color: var(--button-clear-bg-color);
-}
-
-.button-clear:hover {
-    background-color: var(--button-clear-hover-bg-color);
-}
-
-input[type="checkbox"] {
-    accent-color: var(--button-bg-color);
-}
-
-.lambda-display {
-    width: 100%;
-    display: flex;
-}
-
-#lambda-terms {
-    width: 100%;
-    margin-top: 1em;
-}
-
-.term {
-    font-size: 1.5em;
-    margin-bottom: 0.5em;
 }
 
 .menu {
+    margin-bottom: 2em;
+
     display: flex;
     justify-content: center;
     gap: 2em;
-    margin-bottom: 2em;
 }
 
 .menu-item {
     position: relative;
+
     display: flex;
     align-items: center;
     gap: 0.5em;
+}
+
+.button-wrapper {
+    position: relative;
+
+    display: inline-block;
+}
+
+.menu-item:hover .tooltip,
+.button-wrapper:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+input[type="checkbox"] {
+    accent-color: var(--button-bg-color);
 }
 
 .tooltip {
@@ -134,19 +99,66 @@ input[type="checkbox"] {
     transform: translateX(-50%);
 }
 
-.menu-item:hover .tooltip,
-.button-wrapper:hover .tooltip {
-    visibility: visible;
-    opacity: 1;
+.lambda-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
 }
 
-.button-wrapper {
-    position: relative;
-    display: inline-block;
+#lambda-inp {
+    width: 50%;
+    padding: 0.5em;
+
+    border: 1px solid var(--input-border-color);
+    border-radius: 5px;
+
+    background-color: var(--input-bg-color);
+    color: var(--fg-color);
+
+    font-size: 1.2em;
 }
 
-label {
+.lambda-display {
+    width: 100%;
+    display: flex;
+}
+
+#lambda-terms {
+    width: 100%;
+    margin-top: 1em;
+}
+
+.term {
+    margin-bottom: 0.5em;
+    font-size: 1.5em;
+}
+
+button {
+    padding: 0.5em 1em;
+
+    background-color: var(--button-bg-color);
+    color: var(--button-fg-color);
+
+    border: none;
+    border-radius: 5px;
+
+    font-size: 1em;
     cursor: pointer;
+
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: var(--button-hover-bg-color);
+}
+
+.button-clear {
+    background-color: var(--button-clear-bg-color);
+}
+
+.button-clear:hover {
+    background-color: var(--button-clear-hover-bg-color);
 }
 
 .var-lib-container {
@@ -175,12 +187,14 @@ label {
 
 .var-lib-item {
     margin-bottom: 0.5em;
+
     text-align: left;
     font-size: 0.9em;
 }
 
 .var-lib-key {
     color: var(--var-lib-key-color);
+
     font-weight: bold;
 }
 

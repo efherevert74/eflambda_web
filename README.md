@@ -1,5 +1,9 @@
 # Eflambda Web
 
+Give it a try at [efherevert74.github.io][site]!
+
+## About
+
 Web interface for lambda calculus interpreter.
 Written in plain JS and CSS.
 Uses [eflambda.h][eflambda] C library (through WebAssembly) for working with
@@ -64,6 +68,7 @@ You can check them all in the `eflambda/eflambda_std.h` file.
 
 1.  Open http://localhost:8000/ in your browser.
 
+[site]: https://efherevert74.github.io/eflambda_web/
 [eflambda]: https://github.com/efherevert74/eflambda
 [stb_ds]: https://github.com/nothings/stb/
 [emcc]: https://emscripten.org/

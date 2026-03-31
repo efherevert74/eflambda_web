@@ -127,6 +127,7 @@ input[type="checkbox"] {
 #lambda-terms {
     width: 100%;
     margin-top: 1em;
+    margin-bottom: 1em;
 }
 
 .term {
